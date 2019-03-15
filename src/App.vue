@@ -2,9 +2,11 @@
 <!--的子组件-->
 <template>
   <div id="app">
-    <div id="nav">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
+    <!--回到顶部按钮-->
+    <div @click="goTop" class="toTopButton">
+      <svg class="icon">
+        <use xlink:href="#icon-to-top"></use>
+      </svg>
     </div>
     <router-view/>
       <Foot></Foot>
