@@ -5,8 +5,22 @@
       <router-link to="/about">About</router-link>
     </div>
     <router-view/>
+      <Foot></Foot>
   </div>
 </template>
+
+<script>
+  //引入foot组件
+  import Foot from 'components/foot/foot.vue'
+
+  export default {
+    name: 'App',
+    components: {
+        //局部注册foot组件后可以使用
+        Foot
+    }
+  }
+</script>
 
 <style lang="scss">
 #app {
