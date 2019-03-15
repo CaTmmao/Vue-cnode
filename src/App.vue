@@ -1,3 +1,5 @@
+<!--App.vue文件是我们的主组件，所有页面都是在App.vue下进行切换的，也可以理解为所有的路由都是App.vue-->
+<!--的子组件-->
 <template>
   <div id="app">
     <div id="nav">
@@ -23,21 +25,6 @@
 </script>
 
 <style lang="scss">
-#app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-}
-#nav {
-  padding: 30px;
-  a {
-    font-weight: bold;
-    color: #2c3e50;
-    &.router-link-exact-active {
-      color: #42b983;
-    }
-  }
-}
+    //引入公用scss样式
+  @import "assets/scss/common";
 </style>
