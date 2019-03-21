@@ -1,3 +1,4 @@
+<!--footer组件-->
 <template>
     <!--v-pre作用：这个组件的script标签里没有任何指令，我们在编译的时候可以跳过他，加快编译速度-->
     <footer class="footer" v-pre>
@@ -7,13 +8,10 @@
             </div>
             <div class="api">
                 <ul>
-                    <li class="cnode">
+                    <li>
                         <span>CNode社区提供API</span>
                         <a href="https://cnodejs.org" target="_blank">
-                            <img
-                                    src="https://cnodejs.org/public/images/cnodejs.svg"
-                                    alt="cnode"
-                            />
+                            <img src="https://cnodejs.org/public/images/cnodejs.svg" alt="cnode"/>
                         </a>
                     </li>
                 </ul>
@@ -24,19 +22,21 @@
 
 <script>
     export default {
+        //给该组件起的名字会显示在vue的devtool中
         name: "foot"
     }
 </script>
 
 <style scoped lang="scss">
     /*引入scss变量文件*/
-    @import "assets/scss/variable.scss";
+    @import "@/assets/scss/variable.scss";
 
     .footer {
         padding: 25px 10px 35px 10px;
         background: #333;
 
         .footer-container {
+            /*头部，底部，页面中间内容宽度固定，达到纵向对齐*/
             width: $width;
             margin: 0 auto;
 

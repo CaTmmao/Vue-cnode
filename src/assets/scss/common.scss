@@ -1,4 +1,8 @@
-/*整个项目通用css*/
+/*整个项目通用样式*/
+
+//引入scss变量文件
+@import 'variable.scss';
+
 *,
 *::before,
 *::after {
@@ -9,12 +13,10 @@
 
 html {
     height: 100vh;
-    width: 100vw;
 }
 
 body {
     height: 100%;
-    width: 100%;
     font-family: -apple-system, "PingFang SC", "Hiragino Sans GB", Arial, "Microsoft YaHei", "Helvetica Neue", sans-serif;
     font-size: 14px;
 }
@@ -25,4 +27,66 @@ ul {
 
 a {
     text-decoration: none;
+}
+
+input {
+    outline: none;
+    border: 1px solid #e1e1e1;
+}
+
+button {
+    outline: none;
+
+    &:hover {
+        cursor: pointer;
+    }
+}
+
+//views文件中的每个vue文件中template标签内最外部都是用的section标签，class为index-section，用来统一各个页面整体宽度和margin
+.index-section {
+    width: $width;
+    margin:20px auto;
+
+    //下一级子元素都有一个topics-container class，用来统一页面左侧部分的样式
+    .topics-container {
+        float: left;
+      //宽度是 父元素100% - （右侧侧边栏宽度 + 20）
+        width: calc(100% - #{$sidebarWidth + 20});
+    }
+}
+
+//toast样式
+.week-toast {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    text-align: center;
+    background-color: rgba(75, 75, 75, 0.85);
+    color: #fff;
+    padding: 9px 20px;
+    font-size: 15px;
+    z-index: 999;
+
+    &.toast-show {
+        animation: show 2s;
+    }
+
+    @keyframes show {
+        0% {
+            transform: translateY(-100%);
+        }
+        20% {
+            transform: translateY(0);
+        }
+        50% {
+            transform: translateY(0);
+        }
+        80% {
+            transform: translateY(0);
+        }
+        100% {
+            transform: translateY(-100%);
+        }
+    }
 }

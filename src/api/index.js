@@ -1,0 +1,37 @@
+//接口配置
+const API_CONFIG = {
+    // 登录 POST
+    login: 'https://cnodejs.org/api/v1/accesstoken',
+
+    // 获取主题列表 GET
+    topics: 'https://cnodejs.org/api/v1/topics',
+
+    // 获取主题详情包括回复 GET
+    topicDetail: 'https://cnodejs.org/api/v1/topic/',
+
+    // 收藏主题 POST
+    collection: 'https://cnodejs.org/api/v1/topic_collect/collect',
+
+    // 取消收藏主题 POST
+    cancelCollection: 'https://cnodejs.org/api/v1/topic_collect/de_collect',
+
+    // 获取未读消息数量 GET
+    messageCount: 'https://cnodejs.org/api/v1/message/count',
+
+    // 获取已读和未读消息 GET
+    fetchMessages: 'https://cnodejs.org/api/v1/messages',
+
+    // 标记全部已读 POST
+    messageMarkAll: 'https://cnodejs.org/api/v1/message/mark_all',
+
+    // 标记单个消息为已读 POST  /message/mark_one/:msg_id
+    messageMarkOne: 'https://cnodejs.org/api/v1/message/mark_one/',
+
+    // 用户详细信息 GET /user/:loginname
+    user: 'https://cnodejs.org/api/v1/user/',
+
+    // 用户所收藏的主题 GET  /topic_collect/:loginname
+    userCollections: 'https://cnodejs.org/api/v1/topic_collect/',
+}
+
+export default API_CONFIG

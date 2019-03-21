@@ -7,9 +7,12 @@
     "build": "vue-cli-service build"
   },
   "dependencies": {
+    "axios": "^0.18.0",
+    "iview": "^2.14.0",
     "vue": "^2.6.6",
     "vue-router": "^3.0.1",
-    "vuex": "^3.0.1"
+    "vuex": "^3.0.1",
+    "webpack-zepto": "0.0.1"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "^3.5.0",
