@@ -152,11 +152,11 @@
                     color: #333;
 
                     &:hover {
-                        color: #5f7d6e;
+                        color: $themeColor;
                     }
 
                     &.active {
-                        color: #5f7d6e;
+                        color: $themeColor;
                         font-weight: bold;
                     }
                 }

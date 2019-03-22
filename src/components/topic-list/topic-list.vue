@@ -3,9 +3,14 @@
         <!--循环topics数组，有多少个item就有多少个li标签-->
         <!--id 为592f8ef01e7e75f60c1ad80d的这篇主题有问题，不让他显示出来-->
         <li v-for="item of topics" :key="item.id" v-if="item.id !== '592f8ef01e7e75f60c1ad80d'">
-            <router-link class="img" :to="{name: 'User', params: {loginname: item.author.loginname}}">
-                <img :src="item.author.avatar_url" alt="头像" :title="item.author.loginname">
+            <router-link class="img" :to="{name: 'User', params: {loginname: item.user.loginname}}">
+                <img :src="item.user.avatar_url" alt="头像" :title="item.user.loginname">
             </router-link>
+            <div class="count">
+                <em>{{item.reply_count}}</em>
+                <span>/</span>
+                <em>{{item.visit_count}}</em>
+            </div>
             <!--根据tag方法求出该item的分类（如：招聘，置顶，精华，测试），并根据不同的className设置不同的样式-->
             <span class="tag" :class="tag(item).className">{{tag(item).text}}</span>
             <router-link class="title" :to="{name: 'Topic', params: {id: item.id}}" :title="item.title">{{item.title}}
@@ -57,22 +62,26 @@
                     //话题分类为 问答
                     case 'ask':
                         return {
-                            text: '问答'
+                            text: '问答',
+                            className: 'ask'
                         }
                     //话题分类为 分享
                     case 'share':
                         return {
-                            text: '分享'
+                            text: '分享',
+                            className: 'share'
                         }
                     //话题分类为 招聘
                     case 'job':
                         return {
-                            text: '招聘'
+                            text: '招聘',
+                            className: 'job'
                         }
                     //话题分类为 测试
                     case 'dev':
                         return {
-                            text: '测试'
+                            text: '测试',
+                            className: 'dev'
                         }
                     //如果没有，默认分类为 其他
                     default:
@@ -86,14 +95,14 @@
 </script>
 
 <style scoped lang="scss">
+    @import '@/assets/scss/variable.scss';
     .unique-topics-list {
 
         li {
             overflow: hidden;
-            padding: 10px;
+            padding: 10px 15px;
             display: flex;
             align-items: center;
-            justify-content: flex-start;
 
             &:not(:nth-last-child(1)) {
                 border-bottom: 1px solid #f6f6f6;
@@ -105,30 +114,43 @@
         }
 
         .img {
-
             display: inline-block;
-            width: 35px;
-            height: 35px;
+            width: 50px;
+            height: 50px;
 
             img {
-                width: 35px;
-                height: 35px;
-                border-radius: 2px;
+                width: 100%;
+                height: 100%;
+                border-radius: 50%;
+            }
+        }
+
+        .count {
+            text-align: center;
+            width: 70px;
+            margin: 0 15px;
+            font-size: 15px;
+
+            > em:first-child {
+                color: purple;
+            }
+
+            > em:last-child,
+            > span {
+                color: grey;
             }
         }
 
         .tag {
-            height: 22px;
             display: inline-block;
-            margin: 0 10px;
-            line-height: 22px;
+            line-height: 30px;
             font-size: 12px;
             color: #1890ff;
             background: #e6f7ff;
             border: 1px solid #91d5ff;
             padding: 0 10px;
             white-space: nowrap;
-            border-radius: 2px;
+            border-radius: 4px;
             font-weight: 500;
 
             /*精华，置顶话题应用这个样式*/
@@ -138,16 +160,35 @@
                 color: #52c41a;
                 border-color: #b7eb8f;
             }
+
+            &.job {
+                background-color: rgba(144,147,153,.1);
+                border-color: rgba(144,147,153,.2);
+                color: #909399;
+            }
+
+            &.share {
+                color: #E6A23C;
+                background-color: rgba(230,162,60,.1);
+                border-color: rgba(230,162,60,.2);
+            }
+
+            &.ask {
+                color: #67C23A;
+                background-color: rgba(103,194,58,.1);
+                border-color: rgba(103,194,58,.2);
+            }
         }
 
         .title {
-            color: #313c36;
+            margin-left: 20px;
+            color: $themeColor;
+            font-weight: 600;
             display: inline-block;
-            width: 70%;
+            width: 60%;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
-            font-size: 16px;
 
             &:hover {
                 color: #5f7d6e;
@@ -156,7 +197,6 @@
 
         .last-reply-time {
             margin-left: auto;
-            font-size: 12px;
 
             time {
                 word-break: keep-all;

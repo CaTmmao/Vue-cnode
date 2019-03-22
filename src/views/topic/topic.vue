@@ -12,7 +12,7 @@
                         </div>
                         <div class="topic-bottom">
                             <div class="topic-info">
-                                <span>• 发布于 {{detail.create_at | fromNow}} • 作者 </span>
+                                <span> 发布于 {{detail.create_at | fromNow}} • 作者 </span>
                                 <router-link :to="`/user/${detail.author.loginname}`">{{detail.author.loginname}}
                                 </router-link>
                                 <span> • {{detail.visit_count}} 次浏览 • 最后一次回复是 {{detail.last_reply_at | fromNow}} • 来自 {{detail.tab | comeFrom}}</span>
@@ -29,7 +29,7 @@
                 <div class="reply" v-show="detail.reply_count > 0">
                     <div class="reply-count">{{detail.reply_count}} 个回复</div>
                     <ul>
-                        <li v-for="(item, index) of detail.replies" :key="item.id">
+                        <li class="reply-item" v-for="(item, index) of detail.replies" :key="item.id">
                             <div class="avatar">
                                 <router-link :to="`/user/${item.author.loginname}`">
                                     <img :src="item.author.avatar_url" alt="头像">
@@ -37,16 +37,22 @@
                             </div>
                             <div class="reply-right">
                                 <div class="reply-author">
-                                    <router-link :to="`/user/${item.author.loginname}`">{{item.author.loginname}}
-                                    </router-link>
                                     <!--index默认从0开始,所以楼层最开始需要 + 1-->
-                                    <span>{{index + 1}}楼 {{item.create_at | fromNow}}</span>
+                                    <span>{{index + 1}}楼</span>
+                                    <router-link :to="`/user/${item.author.loginname}`">{{item.author.loginname}}</router-link>
+                                    <span>{{item.create_at | fromNow}}</span>
                                     <strong v-if="detail.author.loginname === detail.replies[index].author.loginname">
                                         作者
                                     </strong>
                                 </div>
+                                <div class="reply-content markdown-body" v-html="item.content"></div>
                             </div>
-                            <div class="reply-content markdown-body" v-html="item.content"></div>
+                            <div class="operation">
+                                <div class="thumb">
+                                    <img :src="require('@/assets/images/thumbs-up.svg')" alt="点赞">
+                                    <em>{{item.ups.length}}</em>
+                                </div>
+                            </div>
                         </li>
                     </ul>
                 </div>
@@ -125,6 +131,7 @@
                         //成功获取数据后取消显示loading效果
                         this.loading = false
                         this.detail = res.data.data
+                        console.log(this.detail);
                     })
             },
             //收藏 / 取消收藏主题
@@ -181,7 +188,7 @@
                 background: #fff;
 
                 .topic-top {
-                    padding: 15px 10px;
+                    padding: 15px 20px;
                     border-bottom: 1px solid #eee;
                 }
 
@@ -191,7 +198,7 @@
                     h1 {
                         float: left;
                         width: calc(100% - 50px);
-                        margin: -4px 5px 0 10px;
+                        margin: -4px 5px 0 0;
                         font-weight: bold;
                         color: #000;
                         font-size: 22px;
@@ -207,11 +214,11 @@
                     }
 
                     a {
-                        color: #5f7d6e;
+                        color: $themeColor;
                         font-weight: 600;
 
                         &:hover {
-                            color: #42b983;
+                            color: $themeColor;
                         }
                     }
                 }
@@ -222,7 +229,7 @@
                     button {
                         position: relative;
                         padding: 5px 10px;
-                        background: #495060;
+                        background: $themeColor;
                         color: #fff;
                         border: none;
                         font-weight: 500;
@@ -265,22 +272,27 @@
                 border-radius: 3px;
 
                 li {
-                    padding: 10px 10px 30px 10px;
+                    padding: 10px;
                     overflow: hidden;
                     background: #fff;
+                    display: flex;
+                    margin: 5px 10px;
+                    border-bottom: 1px solid #ebedf0;
                 }
 
                 .reply-count {
                     padding: 10px;
-                    background: #f6f6f6;
+                    color: rgba(0, 0, 0, 0.85);
+                    font-weight: 600;
+                    border: 1px solid #ebedf0;
                 }
 
                 .avatar {
-                    float: left;
+                    margin-right: 5px;
 
                     img {
-                        width: 30px;
-                        height: 30px;
+                        width: 50px;
+                        height: 50px;
                         background: #f7f7f7;
                         object-fit: cover;
                         border-radius: 3px;
@@ -291,27 +303,22 @@
                     float: left;
 
                     a {
+                        margin: 0 5px;
                         color: #5f7d6e;
                         font-weight: 600;
-                        font-size: 12px;
 
                         &:hover {
-                            color: #42b983;
+                            color: $themeColor;
                         }
-                    }
-
-                    span {
-                        margin-left: 5px;
-                        font-size: 12px;
                     }
 
                     strong {
                         margin-left: 5px;
-                        font-size: 12px;
-                        background: #42b983;
+                        background: $themeColor;
                         color: #fff;
-                        padding: 1px;
                         border-radius: 1px;
+                        padding: 1px;
+                        font-size: 13px;
                         font-weight: bold;
                     }
                 }
@@ -319,84 +326,39 @@
                 .reply-right {
                     float: left;
                     width: calc(100% - 40px);
-                    overflow: hidden;
                     margin: 0 0 0 10px;
                 }
 
                 .operation {
                     float: right;
 
-                    i {
-                        cursor: pointer;
-                        font-size: 16px;
-                        vertical-align: middle;
-                    }
-
-                    em {
-                        margin-left: 5px;
-                    }
-
                     > div {
-                        float: left;
+                        display: flex;
+                        align-items: center;
                         margin-left: 7px;
+                    }
+
+                    .thumb {
+                        display: flex;
+                        align-items: center;
+                        font-size: 15px;
+
+                        img {
+                            width: 12px;
+                            height: 15px;
+                            transform: rotate(-15deg);
+                            margin-right: 5px;
+                        }
                     }
                 }
 
                 .reply-content {
                     clear: left;
-                    padding-left: 40px;
+                    font-size: 14px;
+                    padding-top: 10px;
                 }
             }
 
-            // 新建评论
-            .insert-reply {
-                box-shadow: 0 2px 12px 0 rgba(0, 0, 0, .1);
-                margin-top: 15px;
-                background: #fff;
-
-                &.hidden {
-                    z-index: -1111;
-                    position: fixed;
-                    top: -1000px;
-                    left: -1000px;
-                    visibility: hidden;
-                }
-
-                .tip {
-                    padding: 10px;
-                    background: $boxTopColor;
-                }
-
-                .reply-btn {
-                    padding: 0 0 10px 10px;
-
-                    button {
-                        position: relative;
-                        color: #fff;
-                        background: #495060;
-                        border-radius: 3px;
-                        padding: 5px 10px;
-                        font-weight: 500;
-                        border: none;
-
-                        &:after {
-                            content: '';
-                            position: absolute;
-                            top: 0;
-                            left: 0;
-                            right: 0;
-                            bottom: 0;
-                            border-radius: 3px;
-                            background: #000;
-                            opacity: 0;
-                        }
-
-                        &:active:after {
-                            opacity: .1;
-                        }
-                    }
-                }
-            }
         }
     }
 

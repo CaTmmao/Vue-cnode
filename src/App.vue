@@ -112,6 +112,9 @@
     @import "@/assets/scss/common.scss";
 
     #app {
+      font-family: -apple-system, "PingFang SC", "Hiragino Sans GB", Arial, "Microsoft YaHei", "Helvetica Neue", sans-serif;
+      font-size: 14px;
+
       .toTopButton {
         position: fixed;
         bottom: 30px;

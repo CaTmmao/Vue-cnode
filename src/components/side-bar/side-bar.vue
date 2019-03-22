@@ -36,7 +36,7 @@
                             <img :src="author.avatar_url" alt="头像"/>
                         </router-link>
                         <router-link :to="{name: 'User', params: {loginname: author.loginname}}">
-                            <em class="nickname">{{ author.loginname }}</em>
+                            <span class="nickname">{{ author.loginname }}</span>
                         </router-link>
                     </div>
                 </div>
@@ -46,6 +46,7 @@
 </template>
 
 <script>
+    import API_CONFIG from '@/api/index.js'
     //引入vux中的mapState方法
     import {mapState} from 'vuex'
 
@@ -102,6 +103,9 @@
                     }
                 }
              */
+        },
+        mounted() {
+            console.log(this.author);
         }
     }
 </script>
@@ -137,14 +141,10 @@
                 }
 
                 .nickname {
-                    color: #495060;
+                    color: $themeColor;
                     font-weight: 600;
                     margin-left: 15px;
                     cursor: pointer;
-
-                    &:hover {
-                        color: #42b983;
-                    }
                 }
 
                 a {
