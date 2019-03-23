@@ -1,10 +1,13 @@
 //存放变量的scss文件
 
-//页面宽度
+//整体页面宽度
 $width: 1150px;
 
 //侧边栏宽度
 $sidebarWidth: 290px;
+
+//当前页面没有侧边栏时主内容宽度
+$singleWidth: 85%;
 
 //盒子顶部颜色
 $boxTopColor: rgba(235, 238, 241, .2);

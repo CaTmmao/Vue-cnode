@@ -2,50 +2,43 @@
 <template>
     <aside class="sidebar">
         <div class="personal-information">
-            <!-- 显示个人信息侧边栏 -->
-            <div v-if="from !== 'topic'">
                 <!--如果已经登录账号-->
                 <div v-if="isLogin">
-                    <div class="top">我的信息</div>
+                    <div class="top">信息</div>
                     <div class="info">
-                        <router-link :to="{name: 'User', params: {loginname: userInfo.loginname}}">
-                            <img :src="userInfo.avatar_url" alt="头像"/>
-                        </router-link>
-                        <router-link :to="{name: 'User', params: {loginname: userInfo.loginname}}" class="nickname">
-                            {{userInfo.loginname }}
-                        </router-link>
+                        <div>
+                            <router-link :to="{name: 'User', params: {loginname: user.loginname}}">
+                                <img :src="user.avatar_url" alt="头像"/>
+                            </router-link>
+                            <router-link :to="{name: 'User', params: {loginname: user.loginname}}" class="nickname">
+                                {{user.loginname }}
+                            </router-link>
+                        </div>
+                        <span>积分： {{user.score}}</span>
+                        <div class="github">
+                            Github：
+                            <a title="点击跳转到github" :href="`https://github.com/${user.githubUsername}`" target="_blank">
+                                {{user.githubUsername}}
+                            </a>
+                        </div>
+                        <span>注册时间： {{user.create_at | fromNow}}</span>
                     </div>
                 </div>
 
                 <!--否则显示这个-->
                 <div class="tourist-box" v-else>
-                    <div class="cnode">CNode：Node.js专业中文社区</div>
+                    <p class="cnode">CNode：Node.js专业中文社区</p>
                     <div class="tourist">
                         <span>当前是游客状态，您可以 </span>
                         <router-link to="/login">登录</router-link>
                     </div>
                 </div>
             </div>
-
-            <!--话题页面显示文章作者信息-->
-            <div v-else>
-                <div>
-                    <div class="top">作者</div>
-                    <div class="info">
-                        <router-link :to="{name: 'User', params: {loginname: author.loginname}}">
-                            <img :src="author.avatar_url" alt="头像"/>
-                        </router-link>
-                        <router-link :to="{name: 'User', params: {loginname: author.loginname}}">
-                            <span class="nickname">{{ author.loginname }}</span>
-                        </router-link>
-                    </div>
-                </div>
-            </div>
-        </div>
     </aside>
 </template>
 
 <script>
+    //引入pi配置
     import API_CONFIG from '@/api/index.js'
     //引入vux中的mapState方法
     import {mapState} from 'vuex'
@@ -60,16 +53,27 @@
                 type: String,
                 default: ''
             },
-            author: {
-                type: Object,
-                default() {
-                    return {
-                        // 头像地址
-                        avatar_url: '',
-                        id: '',
-                        //登录名
-                        loginname: ''
-                    }
+            loginname: {
+                type: String
+            },
+            home: {
+                type: String
+            }
+        },
+        data() {
+            return {
+                user: {
+                    // 头像地址
+                    avatar_url: '',
+                    id: '',
+                    //登录名
+                    loginname: '',
+                    //github name
+                    githubUsername: '',
+                    //积分
+                    score: '',
+                    //注册时间
+                    created_at: ''
                 }
             }
         },
@@ -88,8 +92,7 @@
             */
             ...mapState([
                 // this.isLogin映射为 store.state.isLogin
-                'isLogin',
-                'userInfo'
+                'isLogin'
             ])
             /*
              上述代码最终变成下面这样
@@ -105,7 +108,41 @@
              */
         },
         mounted() {
-            console.log(this.author);
+            this.getUserInfo()
+            console.log(this.user);
+        },
+        methods: {
+            //获取用户详细信息渲染到侧边栏
+            getUserInfo() {
+                /*获取用户详细信息（积分，github姓名，头像地址等）：获取方式为向后台发送get请求，参数只需要loginname
+                在大部分页面中的侧边栏通过props来接收父组件传递进来的loginname用来发送请求并渲染到该组件中;
+                由于首页的侧边栏显示的信息是个人信息，首页无法通过props从父组件接收loginname参数，
+                虽然vuex state的userInfo中有loginname参数，但是当页面刷新后vuex数据将清空，因此不能用这个方法获取loginname，
+                最终决定先向后台发送login请求首先获取loginname参数(只需用存储在localStorage中的accesstoken作为参数)，再用
+                这个参数来获取用户详细信息,因此首页的侧边栏需要先向后台发送请求获取loginname，而其他页面中使用的侧边栏组件通过
+                props从父组件接收loginname参数。 */
+
+                //如果是首页,说明loginname无法通过props获取
+                if (this.home === 'true') {
+                    //先从后台获取loginname
+                    this.$axios.post(API_CONFIG.login)
+                        .then(res => {
+                            this.$axios.get(`${API_CONFIG.user}${res.data.loginname}`)
+                                .then(res => {
+                                    //获取到用户的详细信息
+                                    this.user = res.data.data
+                                })
+                        })
+                } else {
+                    //其他页面通过props从父组件接收loginname参数
+                    this.$axios.get(`${API_CONFIG.user}${this.loginname}`)
+                        .then(res => {
+                            //获取到用户的详细信息
+                            this.user = res.data.data
+                        })
+                }
+
+            }
         }
     }
 </script>
@@ -123,6 +160,7 @@
             border-radius: 5px;
 
             .top {
+                font-weight: 600;
                 padding: 10px;
                 color: #495060;
                 background: $boxTopColor;
@@ -130,6 +168,12 @@
 
             .info {
                 padding: 10px;
+                display: flex;
+                flex-direction: column;
+
+                .github {
+                    display: flex;
+                }
 
                 img {
                     display: inline-block;
@@ -149,6 +193,8 @@
 
                 a {
                     display: inline-block;
+                    color: $themeColor;
+                    font-weight: 600;
                     vertical-align: middle;
                 }
             }
@@ -198,7 +244,8 @@
                 margin-top: 15px;
 
                 a {
-                    color: #52c41a;
+                    color: $themeColor;
+                    font-weight: 600;
                 }
             }
         }

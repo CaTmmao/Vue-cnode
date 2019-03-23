@@ -11,12 +11,12 @@
         <ul v-show="readMessages.length > 0">
             <li v-for="(item, index) of readMessages" :key="item.id">
                 <div v-if="item.type === 'reply'">
-                    <router-link :to="`/user/${item.user.loginname}`">{{item.user.loginname}}</router-link>
+                    <router-link :to="`/user/${item.author.loginname}`">{{item.author.loginname}}</router-link>
                     <span> 回复了你的话题</span>
                     <router-link :to="`/topic/${item.topic.id}`">{{item.topic.title}}</router-link>
                 </div>
                 <div v-else-if="item.type === 'at'">
-                    <router-link :to="`/user/${item.user.loginname}`">{{item.user.loginname}}</router-link>
+                    <router-link :to="`/user/${item.author.loginname}`">{{item.author.loginname}}</router-link>
                     <span> 在话题</span>
                     <router-link :to="`/topic/${item.topic.id}`">{{item.topic.title}}</router-link>
                     <span> 中@了你</span>
@@ -46,6 +46,7 @@
 </script>
 
 <style scoped lang="scss">
+    @import '@/assets/scss/variable.scss';
     .msg-list {
         position: relative;
         background: #fff;
@@ -74,7 +75,7 @@
             }
 
             a {
-                color: #313c36;
+                color: $themeColor;
             }
 
             span {

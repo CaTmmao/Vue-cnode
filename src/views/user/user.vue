@@ -3,12 +3,10 @@
     <section class="index-section">
         <!--数据获取完成前显示loading效果-->
         <Loading v-if="loading"></Loading>
-        <div v-else>
-            <div class="topics-container user">
+        <div v-else class="container">
+            <div class="user">
                 <div class="box">
                     <div class="box-title">
-                        <router-link to="/">主页</router-link>
-                        <em class="slashes"> / </em>
                         <span>个人主页</span>
                     </div>
                     <div class="user-info">
@@ -17,10 +15,10 @@
                             <span>{{user.loginname}}</span>
                         </div>
                         <div>{{user.score}} 积分</div>
+                        <div class="create-at">注册时间 {{user.create_at | fromNow}}</div>
                         <div class="view-topics-collections">
                             <router-link :to="`/user/${user.loginname}/collections`">查看话题收藏</router-link>
                         </div>
-                        <div class="create-at">注册时间 {{user.create_at | fromNow}}</div>
                     </div>
                 </div>
                 <div class="box">
@@ -34,7 +32,6 @@
                     <TopicList v-else :topics="user.recent_replies"></TopicList>
                 </div>
             </div>
-            <SideBar></SideBar>
         </div>
     </section>
 </template>
@@ -99,74 +96,84 @@
     .index-section {
         position: relative;
 
-        .user {
+        .container {
+            width: inherit;
+            display: flex;
+            justify-content: center;
+            .user {
+                width: $singleWidth;
 
-            .box {
-                box-shadow: 0 2px 12px 0 rgba(0,0,0,.1);
-                margin-bottom: 15px;
-                background: #fff;
-                border-radius: 3px;
+                .box {
+                    box-shadow: 0 2px 12px 0 rgba(0,0,0,.1);
+                    margin-bottom: 15px;
+                    background: #fff;
+                    border-radius: 3px;
 
-                .box-title {
-                    color: #495060;
-                    font-weight: 600;
-                    padding: 10px;
-                    background: $boxTopColor;
-
-                    a {
-                        color: #5f7d6e;
-                    }
-
-                    .slashes {
-                        color: #ccc;
-                    }
-
-                    span {
+                    .box-title {
                         color: #495060;
-                    }
+                        font-weight: 600;
+                        padding: 10px;
+                        background: $boxTopColor;
 
-                }
+                        a {
+                            color: $themeColor;
+                        }
 
-                .user-info {
-                    padding: 15px 10px;
-
-                    .user {
-                        margin-bottom: 10px;
-
-                        img {
-                            width: 50px;
-                            height: 50px;
-                            background: #f6f6f6;
-                            vertical-align: middle;
+                        .slashes {
+                            color: #ccc;
                         }
 
                         span {
-                            margin-left: 10px;
-                            vertical-align: middle;
+                            color: #495060;
                         }
+
                     }
 
-                    .view-topics-collections {
-                        margin-top: 5px;
+                    .user-info {
+                        padding: 15px 10px;
 
-                        a {
-                            color: #333;
+                        .user {
+                            margin-bottom: 10px;
+
+                            img {
+                                width: 50px;
+                                height: 50px;
+                                background: #f6f6f6;
+                                vertical-align: middle;
+                                border-radius: 5px;
+                            }
+
+                            span {
+                                margin-left: 10px;
+                                vertical-align: middle;
+                                font-weight: 600;
+                            }
                         }
-                    }
 
-                    .create-at {
-                        margin-top: 10px;
-                        color: #666;
+                        .view-topics-collections {
+                            margin-top: 5px;
+
+                            a {
+                                color: $themeColor;
+                                font-weight: 600;
+                                transition: color .3s;
+                            }
+                        }
+
+                        .create-at {
+                            margin-top: 10px;
+                            color: #666;
+                        }
                     }
                 }
-            }
 
-            .unique-topics-list .title {
-                width: calc(100% - 100px) !important;
-            }
+                .unique-topics-list .title {
+                    width: calc(100% - 100px) !important;
+                }
 
-            .none {
-                padding: 10px;
+                .none {
+                    padding: 10px;
+                }
             }
         }
     }

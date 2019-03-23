@@ -3,8 +3,8 @@
     <section class="index-section">
         <!--数据获取完成前显示loading效果-->
         <Loading v-if="loading"></Loading>
-        <div v-else>
-            <div class="topics-container collections">
+        <div v-else class="container">
+            <div class="collections">
                 <div class="collections-title">
                     <router-link to="/">主页</router-link>
                     <em> / </em>
@@ -13,7 +13,6 @@
                 <TopicList :topics="userCollections" v-if="userCollections.length !== 0"></TopicList>
                 <div v-else class="none">暂无收藏！</div>
             </div>
-            <SideBar></SideBar>
         </div>
     </section>
 </template>
@@ -67,10 +66,16 @@
     /*引入scss变量文件*/
     @import '@/assets/scss/variable.scss';
 
+    .container {
+        width: inherit;
+        display: flex;
+        justify-content: center;
+    }
     .collections {
         box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
         position: relative;
         background: #fff;
+        width: $singleWidth;
 
         .collections-loading {
             position: absolute;
@@ -84,7 +89,7 @@
 
             a {
                 font-weight: 600;
-                color: #5f7d6e;
+                color: $themeColor;
             }
 
             span {

@@ -32,11 +32,12 @@
             </div>
         </div>
         <!--右侧侧边栏组件-->
-        <SideBar></SideBar>
+        <SideBar home="true"></SideBar>
     </section>
 </template>
 
 <script>
+    import {mapState} from 'vuex'
     //引入api配置文件
     import API_CONFIG from '@/api/index.js'
 
@@ -54,6 +55,9 @@
                 topics: [], //主题列表 需要传给 topic-list 子组件
                 loading: false //loading状态默认为false
             }
+        },
+        computed: {
+          ...mapState(['userInfo'])
         },
         /* 生命周期created是vue实例被创建后执行（但还没未被挂载到DOM上）：在这个状态中，vue实例中
         data里的属性都已经被添加进响应式系统*/

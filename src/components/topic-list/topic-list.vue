@@ -3,16 +3,16 @@
         <!--循环topics数组，有多少个item就有多少个li标签-->
         <!--id 为592f8ef01e7e75f60c1ad80d的这篇主题有问题，不让他显示出来-->
         <li v-for="item of topics" :key="item.id" v-if="item.id !== '592f8ef01e7e75f60c1ad80d'">
-            <router-link class="img" :to="{name: 'User', params: {loginname: item.user.loginname}}">
-                <img :src="item.user.avatar_url" alt="头像" :title="item.user.loginname">
+            <router-link class="img" :to="{name: 'User', params: {loginname: item.author.loginname}}">
+                <img :src="item.author.avatar_url" alt="头像" :title="item.author.loginname">
             </router-link>
-            <div class="count">
+            <div class="count" v-if="item.reply_count !== undefined">
                 <em>{{item.reply_count}}</em>
                 <span>/</span>
                 <em>{{item.visit_count}}</em>
             </div>
             <!--根据tag方法求出该item的分类（如：招聘，置顶，精华，测试），并根据不同的className设置不同的样式-->
-            <span class="tag" :class="tag(item).className">{{tag(item).text}}</span>
+            <span v-if="item.reply_count !== undefined" class="tag" :class="tag(item).className">{{tag(item).text}}</span>
             <router-link class="title" :to="{name: 'Topic', params: {id: item.id}}" :title="item.title">{{item.title}}
             </router-link>
             <div class="last-reply-time">

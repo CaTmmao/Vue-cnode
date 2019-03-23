@@ -41,9 +41,7 @@
                                     <span>{{index + 1}}楼</span>
                                     <router-link :to="`/user/${item.author.loginname}`">{{item.author.loginname}}</router-link>
                                     <span>{{item.create_at | fromNow}}</span>
-                                    <strong v-if="detail.author.loginname === detail.replies[index].author.loginname">
-                                        作者
-                                    </strong>
+                                    <strong v-if="detail.author.loginname === detail.replies[index].author.loginname">作者</strong>
                                 </div>
                                 <div class="reply-content markdown-body" v-html="item.content"></div>
                             </div>
@@ -57,7 +55,7 @@
                     </ul>
                 </div>
             </div>
-            <SideBar :author="detail.author" from="topic"></SideBar>
+            <SideBar :loginname="detail.author.loginname" from="topic"></SideBar>
         </div>
     </section>
 </template>
@@ -131,7 +129,6 @@
                         //成功获取数据后取消显示loading效果
                         this.loading = false
                         this.detail = res.data.data
-                        console.log(this.detail);
                     })
             },
             //收藏 / 取消收藏主题
@@ -304,12 +301,8 @@
 
                     a {
                         margin: 0 5px;
-                        color: #5f7d6e;
                         font-weight: 600;
-
-                        &:hover {
-                            color: $themeColor;
-                        }
+                        color: $themeColor;
                     }
 
                     strong {

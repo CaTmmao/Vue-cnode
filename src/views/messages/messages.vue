@@ -1,7 +1,7 @@
 <!--未读消息页面-->
 <template>
     <section class="index-section">
-        <div class="topics-container messages">
+        <div class="index-section messages">
             <!--未读消息-->
             <div class="new-msg">
                 <div class="top">
@@ -79,7 +79,7 @@
             background: $boxTopColor;
 
             a {
-                color: #5f7d6e;
+                color: $themeColor;
             }
 
             em {
