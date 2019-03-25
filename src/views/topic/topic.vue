@@ -52,7 +52,7 @@
                                          :src="require('@/assets/images/thumbs-up.svg')" alt="点赞" title="点赞人数">
                                     <em>{{item.ups.length}}</em>
                                 </div>
-                                <div @click="replyOthers(item.author.loginname)" v-if="isLogin">
+                                <div @click="replyOthers(item.author.loginname)">
                                     <Icon title="回复此楼层" type="reply"/>
                                 </div>
                             </div>
@@ -183,7 +183,11 @@
                 }
             },
             likeBtn() {
-                this.$toast('点赞API已被cnode社区下线，暂时无法点赞')
+                if (!this.isLogin) {
+                    this.$toast('请先登录')
+                } else {
+                    this.$toast('点赞API已被cnode社区下线，暂时无法点赞')
+                }
             },
             //插入评论 (当用户点击确认回复按钮时,click事件触发该方法)
             /*insertReply() {
@@ -219,35 +223,39 @@
                                 })
                         },*/
             // 点赞 / 取消点赞
-            /*            likeBtn(id, author, index) {
-                            //点赞前先进行基本判断:是否登录,是否是在赞自己
-                            try {
-                                //如果没登陆,提醒用户登录
-                                if (!this.isLogin) throw new Error('请先登录!')
-                                if (author.loginname === this.userInfo.loginname) throw new Error('不能赞自己')
-                            } catch (e) {
-                                this.$toast(e.message)
-                            }
+/*            likeBtn(id, author, index) {
+                if (!this.isLogin) {
+                    this.$toast('请先登录')
+                } else {
+                    //点赞前先进行基本判断:是否登录,是否是在赞自己
+                    try {
+                        //如果没登陆,提醒用户登录
+                        if (!this.isLogin) throw new Error('请先登录!')
+                        if (author.loginname === this.userInfo.loginname) throw new Error('不能赞自己')
+                    } catch (e) {
+                        this.$toast(e.message)
+                    }
 
-                            this.$axios.post(`${API_CONFIG.like}${id}/ups`)
-                                .then(res => {
-                                    //取消赞
-                                    if (res.data.action === 'down') {
-                                        //在回复中找到当前楼层(index),并把它的状态改成未点赞
-                                        this.detail.replies[index].is_uped = false
-                                        //从赞的数组中pop出一个,达到从页面上看赞的数量减少一个的效果
-                                        this.detail.replies[index].ups.pop()
-                                    } else {
-                                        //点赞状态为已点赞
-                                        this.detail.replies[index].is_uped = true
-                                        //将当前登录用户的id push 到点赞用户列表里
-                                        this.detail.replies[index].ups.push(this.userInfo.id)
-                                    }
-                                })
-                                .catch(err => {
-                                    console.log(err)
-                                })
-                        },*/
+                    this.$axios.post(`${API_CONFIG.like}${id}/ups`)
+                        .then(res => {
+                            //取消赞
+                            if (res.data.action === 'down') {
+                                //在回复中找到当前楼层(index),并把它的状态改成未点赞
+                                this.detail.replies[index].is_uped = false
+                                //从赞的数组中pop出一个,达到从页面上看赞的数量减少一个的效果
+                                this.detail.replies[index].ups.pop()
+                            } else {
+                                //点赞状态为已点赞
+                                this.detail.replies[index].is_uped = true
+                                //将当前登录用户的id push 到点赞用户列表里
+                                this.detail.replies[index].ups.push(this.userInfo.id)
+                            }
+                        })
+                        .catch(err => {
+                            console.log(err)
+                        })
+                }
+            },*/
             // 回复其他人 参数是想要回复的那人的名字
             replyOthers(loginname) {
                 //offsetTop 获取回复框元素到父元素的距离
