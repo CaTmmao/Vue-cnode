@@ -7,9 +7,6 @@ Vue.use(Router)
 
 //创建router实例，里面可以传入各种配置参数，如routes,mode等
 const router = new Router({
-  //设置为history模式
-  mode: 'history',
-
   //   匹配的优先级按照路由的定义顺序
   routes: [
     {
