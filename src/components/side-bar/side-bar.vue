@@ -109,7 +109,6 @@
         },
         mounted() {
             this.getUserInfo()
-            console.log(this.user);
         },
         methods: {
             //获取用户详细信息渲染到侧边栏

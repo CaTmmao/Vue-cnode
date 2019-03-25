@@ -12,6 +12,7 @@
     </div>
     <div class="router-view">
       <Head></Head>
+      <!--keep-alive，缓存组件实例而不是销毁他们。主要用于保留组件状态 / 阻止组件重新渲染; exclude代表里面写的组件除外-->
       <keep-alive exclude="User,Collections,Messages,Release">
         <!-- 路由出口 路由匹配到的组件将渲染在router-view这里 -->
         <router-view/>
@@ -78,6 +79,7 @@
           }
         })
       },
+      //请求 & 响应拦截
       axiosConfig() {
         //请求拦截器 （发送请求之前运行该代码）把每个请求中重复的代码放在请求拦截器中可以减少代码量
         this.$axios.interceptors.request.use(request => {
@@ -99,7 +101,8 @@
 
           return request
         }, err => {
-          this.$alert('API请求失败')
+          //提示错误
+          this.$toast(err)
           return Promise.reject(err)
         })
       }

@@ -1,11 +1,12 @@
-<!--话题详情页-->
+<!--话题详情页
+注意: 点赞 & 回复 & 发帖 接口均被cnode社区下线,原因为[太多人为了测试客户端乱发帖]-->
 <template>
     <section class="topic index-section">
         <!--数据获取完成前显示loading效果-->
-        <Loading v-if="loading"></Loading>
-        <div v-else>
+        <div>
             <div class="topics-container">
-                <div class="detail">
+                <Loading v-if="loading"></Loading>
+                <div class="detail" v-if="!loading">
                     <div class="topic-top">
                         <div class="topic-title">
                             <h1>{{detail.title}}</h1>
@@ -26,7 +27,7 @@
                     <div class="content markdown-body" v-html="detail.content"></div>
                 </div>
                 <!--回复区域-->
-                <div class="reply" v-show="detail.reply_count > 0">
+                <div class="reply" v-show="detail.reply_count > 0 && !loading">
                     <div class="reply-count">{{detail.reply_count}} 个回复</div>
                     <ul>
                         <li class="reply-item" v-for="(item, index) of detail.replies" :key="item.id">
@@ -47,20 +48,34 @@
                             </div>
                             <div class="operation">
                                 <div class="thumb">
-                                    <img :src="require('@/assets/images/thumbs-up.svg')" alt="点赞">
+                                    <img @click="likeBtn(detail.id, detail.author, index)"
+                                         :src="require('@/assets/images/thumbs-up.svg')" alt="点赞" title="点赞人数">
                                     <em>{{item.ups.length}}</em>
+                                </div>
+                                <div @click="replyOthers(item.author.loginname)" v-if="isLogin">
+                                    <Icon title="回复此楼层" type="reply"/>
                                 </div>
                             </div>
                         </li>
                     </ul>
                 </div>
+                <!--新建评论-->
+                <div class="insert-reply">
+                    <div class="tip">添加回复</div>
+                    <div class="reply-btn">
+                        <textarea id="markdown-editor"></textarea>
+                        <button type="button" @click="insertReply">{{sentReply}}</button>
+                    </div>
+                </div>
             </div>
-            <SideBar :loginname="detail.author.loginname" from="topic"></SideBar>
+            <SideBar v-if="!loading" :loginname="detail.author.loginname" from="topic"></SideBar>
         </div>
     </section>
 </template>
 
 <script>
+    // 引入markdown编辑器
+    import SimpleMDE from 'simplemde'
     //引入api配置
     import API_CONFIG from '@/api/index.js'
     import {mapState} from 'vuex'
@@ -75,6 +90,8 @@
         data() {
             return {
                 loading: true,
+                //回复框下的确认回复按钮默认文字是[回复],当输入好回复内容,点击了确认回复的按钮后,在数据发送完毕之前,按钮的文字变成[发送中]
+                sentReply: '回复',
                 detail: {
                     author: {
                         avatar_url: '',
@@ -92,7 +109,8 @@
                     title: '',
                     top: false,
                     visit_count: 0
-                }
+                },
+                simplemde: null
             }
         },
         //计算属性：当依赖的数据改变时，会重新计算后返回新的结果
@@ -120,6 +138,15 @@
             })
         },
         methods: {
+            //初始化markdown编辑器
+            initMarkdownEditor() {
+                this.simplemde = new SimpleMDE({
+                    // 绑定该元素,样式为simplemde的markdown编辑器样式
+                    element: document.getElementById("markdown-editor"),
+                    // 不开启拼写检查
+                    spellChecker: false
+                });
+            },
             //获取主题详情
             fetchTopic() {
                 //成功获取数据前先显示loading效果
@@ -144,9 +171,92 @@
                         /* 将话题的收藏状态取反
                         (如:原本该话题未收藏,this.detail.is_collect = false,用户点击收藏按钮,
                         成功向后台发送收藏请求后,this.detail.is_collect = true) */
+                        //由于返回的res中无法获取到后台的is_collect数据，所以这里取反来设置当前data中的is_collect达到响应式视图更新
                         this.detail.is_collect = !this.detail.is_collect
                     })
             },
+            insertReply() {
+                if (!this.isLogin) {
+                    this.$toast('请先登录')
+                } else {
+                    this.$toast('回复API已被cnode社区下线，暂时无法回复!')
+                }
+            },
+            likeBtn() {
+                this.$toast('点赞API已被cnode社区下线，暂时无法点赞')
+            },
+            //插入评论 (当用户点击确认回复按钮时,click事件触发该方法)
+            /*insertReply() {
+                            if (!this.isLogin) {
+                            this.$toast('请先登录')
+                            }
+
+                            //如果按钮的内容是发送中,说明用户刚刚输入的回复内容还没发送完成,因此不能再次点击按钮重复发送到后台
+                            if (this.sentReply === '发送中...') return
+
+                            //获取用户在回复框中输入的内容
+                            let content = this.simplemde.value()
+                            //没有内容则不进行后续操作,弹出弹出框提醒用户
+                            if (!content) return this.$toast('回复内容不能为空')
+
+                            //回复按钮中的文字切换成发送中,告知用户此时正在发送请耐心等待
+                            this.sentReply = '发送中...'
+
+                            this.$axios.post(`${API_CONFIG.replies}${this.detail.id}/replies`, {
+                                content: `${content}`
+                            })
+                                .then(res => {
+                                    //回复框中的内容重置为空
+                                    this.simplemde.value('')
+                                    //发送完毕后把回复按钮的文字重置为回复
+                                    this.sentReply = '回复'
+                                    //更新内容(这样就可以显示出自己回复的内容)
+                                    this.fetchTopic()
+                                })
+                                .catch(err => {
+                                    console.log(err)
+                                    this.sentReply = '回复'
+                                })
+                        },*/
+            // 点赞 / 取消点赞
+            /*            likeBtn(id, author, index) {
+                            //点赞前先进行基本判断:是否登录,是否是在赞自己
+                            try {
+                                //如果没登陆,提醒用户登录
+                                if (!this.isLogin) throw new Error('请先登录!')
+                                if (author.loginname === this.userInfo.loginname) throw new Error('不能赞自己')
+                            } catch (e) {
+                                this.$toast(e.message)
+                            }
+
+                            this.$axios.post(`${API_CONFIG.like}${id}/ups`)
+                                .then(res => {
+                                    //取消赞
+                                    if (res.data.action === 'down') {
+                                        //在回复中找到当前楼层(index),并把它的状态改成未点赞
+                                        this.detail.replies[index].is_uped = false
+                                        //从赞的数组中pop出一个,达到从页面上看赞的数量减少一个的效果
+                                        this.detail.replies[index].ups.pop()
+                                    } else {
+                                        //点赞状态为已点赞
+                                        this.detail.replies[index].is_uped = true
+                                        //将当前登录用户的id push 到点赞用户列表里
+                                        this.detail.replies[index].ups.push(this.userInfo.id)
+                                    }
+                                })
+                                .catch(err => {
+                                    console.log(err)
+                                })
+                        },*/
+            // 回复其他人 参数是想要回复的那人的名字
+            replyOthers(loginname) {
+                //offsetTop 获取回复框元素到父元素的距离
+                let top = document.querySelector('.insert-reply').offsetTop
+                //滚动到回复框
+                window.scrollTo(0, top)
+                //把需要回复的人的名字用@的形式先添加入回复框
+                this.simplemde.value(`@${loginname}`)
+            }
         },
         filters: {
             //标签名
@@ -167,6 +277,13 @@
                         return '分享'
                 }
             }
+        },
+        mounted() {
+            this.$nextTick(() => {
+                //初始化simplemde的markdown编辑器
+                console.log(document.getElementById('markdown-editor'));
+                this.initMarkdownEditor()
+            })
         }
     }
 </script>
@@ -204,11 +321,6 @@
 
                 .topic-bottom {
                     margin-top: 10px;
-
-                    span,
-                    a {
-                        font-size: 12px;
-                    }
 
                     a {
                         color: $themeColor;
@@ -281,7 +393,8 @@
                     padding: 10px;
                     color: rgba(0, 0, 0, 0.85);
                     font-weight: 600;
-                    border: 1px solid #ebedf0;
+                    border-top: 1px solid #ebedf0;
+                    border-bottom: 1px solid #ebedf0;
                 }
 
                 .avatar {
@@ -301,8 +414,12 @@
 
                     a {
                         margin: 0 5px;
+                        color: #5f7d6e;
                         font-weight: 600;
-                        color: $themeColor;
+
+                        &:hover {
+                            color: $themeColor;
+                        }
                     }
 
                     strong {
@@ -324,6 +441,8 @@
 
                 .operation {
                     float: right;
+                    display: inline-flex;
+                    align-items: flex-start;
 
                     > div {
                         display: flex;
@@ -340,8 +459,15 @@
                             width: 12px;
                             height: 15px;
                             transform: rotate(-15deg);
-                            margin-right: 5px;
+                            margin-right: 3px;
+                            cursor: pointer;
                         }
+                    }
+
+                    i {
+                        margin-left: 10px;
+                        font-size: 20px;
+                        cursor: pointer;
                     }
                 }
 
@@ -352,6 +478,56 @@
                 }
             }
 
+            // 新建评论
+            .insert-reply {
+                box-shadow: 0 2px 12px 0 rgba(0, 0, 0, .1);
+                margin-top: 15px;
+                background: #fff;
+
+                &.hidden {
+                    z-index: -1111;
+                    position: fixed;
+                    top: -1000px;
+                    left: -1000px;
+                    visibility: hidden;
+                }
+
+                .tip {
+                    font-weight: 600;
+                    padding: 10px;
+                    background: $boxTopColor;
+                }
+
+                .reply-btn {
+                    padding: 0 10px 10px 10px;
+
+                    button {
+                        position: relative;
+                        color: #fff;
+                        background: #495060;
+                        border-radius: 3px;
+                        padding: 5px 10px;
+                        font-weight: 500;
+                        border: none;
+
+                        &:after {
+                            content: '';
+                            position: absolute;
+                            top: 0;
+                            left: 0;
+                            right: 0;
+                            bottom: 0;
+                            border-radius: 3px;
+                            background: #000;
+                            opacity: 0;
+                        }
+
+                        &:active:after {
+                            opacity: .1;
+                        }
+                    }
+                }
+            }
         }
     }
 

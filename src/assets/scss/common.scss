@@ -56,6 +56,20 @@ button {
     }
 }
 
+//覆盖simplemde的markdown编辑器样式
+.editor-toolbar {
+    border-left: none !important;
+    border-right: none !important;
+    border-radius: 0 !important;
+}
+
+.CodeMirror.cm-s-paper.CodeMirror-wrap {
+    border-left: none !important;
+    border-right: none !important;
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+}
+
 //views文件中的每个vue文件中template标签内最外部都是用的section标签，class为index-section，用来统一各个页面整体宽度和margin
 .index-section {
     width: $width;

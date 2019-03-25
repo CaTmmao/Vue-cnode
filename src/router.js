@@ -52,6 +52,12 @@ const router = new Router({
       component: () => import('@/views/topic/topic')
     },
     {
+      //发布主题页面
+      name: 'Release',
+      path: '/release/:id',
+      component: () => import('@/views/release/release')
+    },
+    {
       //404页面
       name: 'NotMatch',
       //匹配所有路径 通常用于客户端404错误，当无法匹配到上面的路径时，就会转到这个组件

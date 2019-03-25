@@ -9,10 +9,10 @@
 
             <!--右侧导航栏-->
             <nav class="nav">
-                <!--回到首页-->
-                <router-link to="/" class="home" title="首页">
+                <!--发布话题-->
+                <router-link :to="`/release/${userInfo.id}`" v-if="isLogin" title="发布话题">
                     <svg class="icon">
-                        <use xlink:href="#icon-home"></use>
+                        <use xlink:href="#icon-release"></use>
                     </svg>
                 </router-link>
                 <!--个人信息页面  转到user路由时，将loginname参数传递进去，在user页面中通过this.$route.params接收该参数-->

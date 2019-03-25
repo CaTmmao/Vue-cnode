@@ -32,6 +32,19 @@ const API_CONFIG = {
 
     // 用户所收藏的主题 GET  /topic_collect/:loginname
     userCollections: 'https://cnodejs.org/api/v1/topic_collect/',
+
+    // 以下接口为已下线接口
+        //点赞/取消点赞 POST  /reply/:reply_id/ups 为评论点赞
+        like: 'https://cnodejs.org/api/v1/reply/',
+
+        // 新建评论 POST /topic/:topic_id/replies
+        replies: 'https://cnodejs.org/api/v1/topic/',
+
+        // 新建主题 POST
+        newTopics: 'https://cnodejs.org/api/v1/topics',
+
+        // 编辑主题 POST
+        updateTopics: 'https://cnodejs.org/api/v1/topics/update',
 }
 
 export default API_CONFIG
