@@ -113,6 +113,8 @@
 <style lang="scss">
     //引入公用scss样式
     @import "@/assets/scss/common.scss";
+    //引入响应式scss样式
+    @import "@/assets/scss/media.scss";
 
     #app {
       font-family: -apple-system, "PingFang SC", "Hiragino Sans GB", Arial, "Microsoft YaHei", "Helvetica Neue", sans-serif;

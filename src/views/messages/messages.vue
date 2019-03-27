@@ -1,7 +1,7 @@
 <!--未读消息页面-->
 <template>
     <section class="index-section">
-        <div class="index-section messages">
+        <div class="messages">
             <!--未读消息-->
             <div class="new-msg">
                 <div class="top">
@@ -68,7 +68,18 @@
     /*引入scss变量文件*/
     @import '@/assets/scss/variable.scss';
 
+    .index-section {
+        display: flex;
+        justify-content: center;
     .messages {
+        width: $singleWidth;
+
+        @media screen and(max-width: 992px) {
+            & {
+                width: 100%;
+            }
+        }
+
         .new-msg {
             box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
         }
@@ -124,5 +135,6 @@
             margin-top: 15px;
             box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
         }
+    }
     }
 </style>

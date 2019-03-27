@@ -114,6 +114,7 @@
         }
 
         .nav {
+            display: flex;
 
             a {
                 width: 25px;

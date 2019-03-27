@@ -119,15 +119,15 @@
             height: 50px;
 
             img {
-                width: 100%;
-                height: 100%;
+                width: 50px;
+                height: 50px;
                 border-radius: 50%;
             }
         }
 
         .count {
             text-align: center;
-            width: 70px;
+            min-width: 70px;
             margin: 0 15px;
             font-size: 15px;
 

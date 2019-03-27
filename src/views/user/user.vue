@@ -97,11 +97,17 @@
         position: relative;
 
         .container {
-            width: inherit;
+            width: 100%;
             display: flex;
             justify-content: center;
             .user {
                 width: $singleWidth;
+
+                @media screen and(max-width: 992px) {
+                    & {
+                        width: 100%;
+                    }
+                }
 
                 .box {
                     box-shadow: 0 2px 12px 0 rgba(0,0,0,.1);

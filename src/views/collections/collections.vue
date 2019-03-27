@@ -77,6 +77,12 @@
         background: #fff;
         width: $singleWidth;
 
+        @media screen and(max-width: 992px) {
+            & {
+                width: 100%;
+            }
+        }
+
         .collections-loading {
             position: absolute;
             top: 80px;

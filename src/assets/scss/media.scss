@@ -1,0 +1,17 @@
+//媒体查询，用来做响应式样式
+
+@import '@/assets/scss/variable.scss';
+
+@media screen and(max-width: 992px) {
+  .index-section {
+
+    .topics-container {
+      width: 100% !important;
+    }
+
+    aside.sidebar,
+    .release-sidebar {
+      display: none !important;
+    }
+  }
+}
