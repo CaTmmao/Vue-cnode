@@ -44,22 +44,22 @@ ES6
 ## 本地运行
 ```
 1. 克隆到本地
-git clone git@github.com:CaTmmao/vue-cnode.git
+$ git clone git@github.com:CaTmmao/vue-cnode.git
 
 2. 进入项目文件
-cd vue-cnode
+$ cd vue-cnode
 
 3. 安装依赖
-npm install or yarn install
+$ npm install or yarn install
 
 如果遇到node-sass安装不成功的情况，请rm -rf node_modules后用下面命令安装node-sass:
-npm install --unsafe-perm node-sass
+$ npm install --unsafe-perm node-sass
 
 4. 本地运行
-npm run serve or yarn serve
+$ npm run serve or yarn serve
 
 5. 打包代码
-npm run build 
+$ npm run build 
 ```
 
 ## 如何部署到github pages
@@ -75,18 +75,56 @@ npm run build
 ```
 
 2. 创建新分支 分支取名为gh-pages
-```
-  git branch gh-pages
+```bash
+$ git branch gh-pages
 ```
 
 3. 将根目录中.gitignore中将dist删掉，避免dist目录无法上传（也可以跳过这步，之后git add dist的时候用命令行参数 -r 强制执行）
 
-4. npm run build 打包文件得到 dist文件
+4. 创建 **deploy.sh** 文件
+```
 
-5. 上传dist文件到github远程分支 gh-pages上
+#!/usr/bin/env sh
+
+# abort on errors
+set -e
+
+# build
+npm run build
+
+# navigate into the build output directory
+cd dist
+
+# if you are deploying to a custom domain
+# echo 'www.example.com' > CNAME
+
+git init
+git add -A
+git commit -m 'deploy'
+
+# if you are deploying to https://<USERNAME>.github.io
+# git push -f git@github.com:<USERNAME>/<USERNAME>.github.io.git master
+
+# if you are deploying to https://<USERNAME>.github.io/<REPO>
+# 下面的路径改为自己的仓库
+git push -f git@github.com:CaTmmao/vue-cnode.git master:gh-pages
+
+cd -
 ```
-  git add dist && git commit -m 'upload dist'
-  git subtree push --prefix dist origin gh-pages
+
+运行该文件
 ```
+$ ./deploy.sh
+```
+
+或者在 **package.json**中的script中写入这句
+```
+"d": "bash deploy.sh"
+```
+以后再需要部署的时候直接输入npm命令
+```
+$ npm run d
+```
+
 
 6. 打开github上你的项目仓库，点击上方的**settings**选项→**GitHub Pages**→**Source**下方选择**gh-pages branch**
