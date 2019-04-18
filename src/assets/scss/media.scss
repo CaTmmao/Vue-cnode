@@ -15,3 +15,15 @@
     }
   }
 }
+
+@media screen and(max-width: 680px) {
+  .topics-list {
+    .unique-topics-list {
+      .count,
+      .tag {
+        display: none !important;
+      }
+    }
+  }
+
+}

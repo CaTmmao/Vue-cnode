@@ -6,6 +6,11 @@ import store from './store'
 import axios from 'axios'
 import iView from 'iview'
 
+//引入公用scss样式
+import "@/assets/scss/common.scss";
+//引入响应式scss样式
+import "@/assets/scss/media.scss";
+
 //引入toast插件
 import toast from '../utils/toast'
 //通过全局方法Vue.use使插件可用
